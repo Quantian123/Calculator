@@ -13,18 +13,17 @@ public class MyButtonAdapter implements ActionListener  {
     private MyFrame castedRoot;
     private Display display;
 
-    final String[] numbersFrom0to9 = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
+    private final String[] numbersFrom0to9 = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
 
-    static char operator='+';
-    static boolean flag=false;
-    static double num1 = 0;
-    static double num2 = 0;
-    static double result = 0;//unnecessary variable
-    DecimalFormatSymbols symbols=new DecimalFormatSymbols(Locale.getDefault());
-    DecimalFormat decimal=new DecimalFormat();
+    private static char operator='+';
+    private static boolean flag=false;
+    private static double num1 = 0;
+    private static double num2 = 0;
+    private DecimalFormatSymbols symbols=new DecimalFormatSymbols(Locale.getDefault());
+    private DecimalFormat decimal=new DecimalFormat();
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+     public void actionPerformed(ActionEvent e) {
         source = e.getSource();
         root = SwingUtilities.getRoot((Component) source);
         castedRoot = (MyFrame) root;
@@ -37,7 +36,7 @@ public class MyButtonAdapter implements ActionListener  {
         if(display.getText().length()<7){
             for (int i = 0; i < 10; i++) {
                 if (button.getText().equals(numbersFrom0to9[i])) {
-                    if (display.getText().equals("0") || (flag)) {
+                    if (display.getText().equals("0") || flag) {
                         display.setText("");
                         flag = false;
                     }
@@ -48,7 +47,7 @@ public class MyButtonAdapter implements ActionListener  {
         if (button.getText().equals("C")) {
             display.setText("0");
             flag=false;
-            num2=num1=result=0;
+            num2=num1=0;
         }
         if (button.getText().equals(".")&&(!display.getText().contains("."))){
             display.setText(display.getText().concat("."));
@@ -89,71 +88,61 @@ public class MyButtonAdapter implements ActionListener  {
         if (button.getText().equals("%")) {
             percent();
         }
-        System.out.println("operator"+" "+"num1"+" "+"num2"+" "+"result"+" "+"flag");       //skasować
-        System.out.println(operator+"        "+num1+"  "+num2+"  "+result+"    "+flag);     //na koniec
     }
 
     private void calculate(){
         num2=Double.parseDouble(display.getText());
         switch (operator) {
             case '+': {
-                result=num1+num2;
-                num1=result;
+                num1+=num2;
                 break;
             }
             case '-': {
-                result=num1-num2;
-                num1=result;
+                num1-=num2;
                 break;
             }
             case '/': {
-                result=num1/num2;
-                num1=result;
+             num1/=num2;
                 break;
             }
             case '*': {
-                result=num1*num2;
-                num1=result;
+               num1*=num2;
                 break;
             }
         }
-        if ((result>9999999)||((result>0)&&(result<0.000001))){
+        if ((num1>9999999)||((num1>0)&&(num1<0.000001))){
             decimal.applyPattern("0.0000E0");
 
         } else decimal.applyPattern("0.######");
 
-        display.setText(decimal.format(result));
+        display.setText(decimal.format(num1));
         flag=true;
     }
     private void percent(){
         num2=Double.parseDouble(display.getText());
         switch (operator) {
             case '+': {
-                result=num1+(num1*num2*0.01);
-                num1=result;
+                num1=num1+(num1*num2*0.01);
                 break;
             }
             case '-': {
-                result=num1-(num1*num2*0.01);
-                num1=result;
-                break;
+               num1=num1-(num1*num2*0.01);
+               break;
             }
             case '/': {
-                result=num1/(num2*0.01);
-                num1=result;
+                num1=num1/(num2*0.01);
                 break;
             }
             case '*': {
-                result=num1*(num2*0.01);
-                num1=result;
-                break;
+               num1=num1*(num2*0.01);
+               break;
             }
         }
-        if ((result>9999999)||((result>0)&&(result<0.000001))){
+        if ((num1>9999999)||((num1>0)&&(num1<0.000001))){
             decimal.applyPattern("0.0000E0");
         } else decimal.applyPattern("0.######");
 
-        display.setText(decimal.format(result));
+        display.setText(decimal.format(num1));
         flag=true;
     }
 }
